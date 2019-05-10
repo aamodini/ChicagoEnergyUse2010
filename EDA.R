@@ -11,6 +11,7 @@ library(MASS)
 # Read Data ---------------------------------------------------------------
 
 dat.old <- read.csv("energy-usage-2010.csv")
+dat <- dat.old[complete.cases(dat.old),]
 
 # check how much of the data is missing
 (1 - nrow(dat)/nrow(dat.old))*100 
@@ -18,7 +19,7 @@ dat.old <- read.csv("energy-usage-2010.csv")
 # 31.57% of the data was removed - makes sense because of the NA values present in the categorical variables
 # randomly assigning values to the categorical variables could introduce a lot of bias 
 # when categorising between the months
-dat <- dat.old[complete.cases(dat.old),]
+
 
 # 68 numeric and 5 categorical features
 
@@ -341,12 +342,12 @@ for (mon in 2:ncol(months.dat)){
 }
 
 # Log scale 
-therms.ms$KWH.USE <- log(1+therms.ms$THERM.USE)
-therms.ms <- kwh.ms[,-which(colnames(therms.ms) == "THERM.MEAN.2010")]
+therms.ms$THERM.USE <- log(1+therms.ms$THERM.USE)
+therms.ms <- therms.ms[,-which(colnames(therms.ms) == "THERM.MEAN.2010")]
 
 # look at this plot
 
-ggplot(data=therms.ms, aes(x=months, y=THERM.USE, group=1)) +
+ggplot(data = therms.ms, aes(x=months, y=THERM.USE, group=1)) +
   xlab("Months") + ylab("Avg Therm Consumption") + 
   ggtitle("Average Therm Consumption per Month") +
   theme(plot.title = element_text(hjust = 0.5, size = 10),
